@@ -32,7 +32,7 @@ func defaultInt(varName string, defaultValue int) (int, error) {
 }
 
 func main() {
-	host := "localhost"
+	host := "127.0.0.1"
 	port := 3306
 
 	newVal, err := defaultInt("MYSQL_PORT", 3306)
@@ -56,7 +56,9 @@ func main() {
 
 	flag.Parse()
 
-	dataSourceName := fmt.Sprintf("%s:%s@/tcp(%s:%d)/%s?charset=utf8", user, password, host, port, database)
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8", user, password, host, port, database)
+
+	fmt.Printf("dataSourceName: %s\n", dataSourceName)
 
 	db, err := sql.Open("mysql", dataSourceName)
 
@@ -83,8 +85,14 @@ func main() {
 			count++
 		}
 
+		fmt.Printf("count: %d; expectedCount: %d\n", count, expectedCount)
+
 		if count != expectedCount {
 			panic(fmt.Errorf("Unexpected row count for query: '%s'", query))
 		}
 	}
 }
+/*
+        MYSQL_DATABASE=journaldb MYSQL_USER=journaluser MYSQL_PASSWORD=passw0rd
+
+ */
